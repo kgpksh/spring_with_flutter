@@ -24,7 +24,6 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-//        System.out.println("Secret Key : " + secretKey);
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         if(authorization == null) {
             filterChain.doFilter(request, response);
