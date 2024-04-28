@@ -3,7 +3,6 @@ package com.codecrafter.spring_with_flutter.boundecContext.article.service;
 import com.codecrafter.spring_with_flutter.base.rs.ResponseDataWrapper;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleCreating;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleDeleting;
-import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleReading;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleUpdating;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.response.ArticlePage;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.response.PageWrapper;
@@ -46,8 +45,8 @@ public class ArticleService {
         return ResponseDataWrapper.of("S-6", "Deleting success", null);
     }
 
-    public ResponseDataWrapper<PageWrapper> readArticles(ArticleReading articleRead) {
-        List<ArticlePage> articleList = readArticleList(articleRead);
+    public ResponseDataWrapper<PageWrapper> readArticles(String category, long fromId, int selectRange) {
+        List<ArticlePage> articleList = readArticleList(category, fromId, selectRange);
         int lastIdx = articleList.size() - 1;
         long lastId = articleList.get(lastIdx).getId();
 
@@ -57,11 +56,7 @@ public class ArticleService {
         return ResponseDataWrapper.of("S-4", "Reading Success", pageWrapper);
     }
 
-    private List<ArticlePage> readArticleList(ArticleReading articleRead) {
-        String category = articleRead.getCategory();
-        long fromId = articleRead.getFromId();
-        int selectRange = articleRead.getSelectRange();
-
+    private List<ArticlePage> readArticleList(String category, long fromId, int selectRange) {
         if(category == null) {
             if(fromId == -1) {
                 Optional<List<ArticlePage>> wrappedResult = articleRepository.findFirstArticlePage(selectRange);

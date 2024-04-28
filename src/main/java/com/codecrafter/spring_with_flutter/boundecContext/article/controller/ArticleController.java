@@ -3,7 +3,6 @@ package com.codecrafter.spring_with_flutter.boundecContext.article.controller;
 import com.codecrafter.spring_with_flutter.base.rs.ResponseDataWrapper;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleCreating;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleDeleting;
-import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleReading;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleUpdating;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.response.PageWrapper;
 import com.codecrafter.spring_with_flutter.boundecContext.article.service.ArticleService;
@@ -11,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,9 +25,11 @@ public class ArticleController {
     }
 
     @GetMapping("/readArticleList/v1")
-    public ResponseEntity<ResponseDataWrapper<PageWrapper>> readPageArticle(@RequestBody @Valid ArticleReading articleRead,
-                                                                     BindingResult bindingResult) {
-        ResponseDataWrapper<PageWrapper> result = articleService.readArticles(articleRead);
+    public ResponseEntity<ResponseDataWrapper<PageWrapper>> readPageArticle(
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "fromId", required = false, defaultValue = "-1") long fromId,
+            @RequestParam(value = "selectRange", defaultValue = "50") int selectRange) {
+        ResponseDataWrapper<PageWrapper> result = articleService.readArticles(category, fromId, selectRange);
         return ResponseEntity.ok(result);
     }
 
