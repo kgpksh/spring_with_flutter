@@ -4,6 +4,7 @@ import com.codecrafter.spring_with_flutter.base.security.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecureConfig {
     @Autowired
     private JwtFilter jwtFilter;
@@ -32,8 +34,13 @@ public class SecureConfig {
                     request.requestMatchers(
                             new AntPathRequestMatcher("/member/register"),
                             new AntPathRequestMatcher("/member/login")
-                    )
-                            .anonymous();
+                    ).anonymous();
+
+                    request.requestMatchers(
+                            new AntPathRequestMatcher("/article/create"),
+                            new AntPathRequestMatcher("/article/read")
+                    ).permitAll();
+
                 })
                 .sessionManagement((sessionManagement) -> {
                     sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
