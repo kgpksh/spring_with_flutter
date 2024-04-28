@@ -37,9 +37,14 @@ public class SecureConfig {
                     ).anonymous();
 
                     request.requestMatchers(
-                            new AntPathRequestMatcher("/article/create"),
-                            new AntPathRequestMatcher("/article/read")
+                            new AntPathRequestMatcher("/article/readArticleList/**")
                     ).permitAll();
+
+                    request.requestMatchers(
+                            new AntPathRequestMatcher("/article/createArticle/**"),
+                            new AntPathRequestMatcher("/article/updateArticle/**"),
+                            new AntPathRequestMatcher("/article/deleteArticle/**")
+                    ).authenticated();
 
                 })
                 .sessionManagement((sessionManagement) -> {

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
-public class ArticleRead {
+public class ArticleReading {
     private String category;
     private long fromId;
     @NotNull(message="반드시 숫자가 입력 되어야 합니다.")

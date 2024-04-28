@@ -2,7 +2,9 @@ package com.codecrafter.spring_with_flutter.boundecContext.article.service;
 
 import com.codecrafter.spring_with_flutter.base.rs.ResponseDataWrapper;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleCreating;
-import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleRead;
+import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleDeleting;
+import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleReading;
+import com.codecrafter.spring_with_flutter.boundecContext.article.dto.request.ArticleUpdating;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.response.ArticlePage;
 import com.codecrafter.spring_with_flutter.boundecContext.article.dto.response.PageWrapper;
 import com.codecrafter.spring_with_flutter.boundecContext.article.entity.Article;
@@ -30,7 +32,21 @@ public class ArticleService {
         return ResponseDataWrapper.of("S-3", "Creating success", null);
     }
 
-    public ResponseDataWrapper<PageWrapper> readArticles(ArticleRead articleRead) {
+    public ResponseDataWrapper modifyArticle(ArticleUpdating articleUpdating) {
+        Optional<Article> wrappedArticle = articleRepository.findById(articleUpdating.getId());
+        Article article = wrappedArticle.orElseThrow();
+        article.setTitle(articleUpdating.getTitle());
+        article.setContent(articleUpdating.getContent());
+        articleRepository.save(article);
+        return ResponseDataWrapper.of("S-5", "Updating success", null);
+    }
+
+    public ResponseDataWrapper deleteArticle(ArticleDeleting articleDeleting) {
+        articleRepository.deleteById(articleDeleting.getId());
+        return ResponseDataWrapper.of("S-6", "Deleting success", null);
+    }
+
+    public ResponseDataWrapper<PageWrapper> readArticles(ArticleReading articleRead) {
         List<ArticlePage> articleList = readArticleList(articleRead);
         int lastIdx = articleList.size() - 1;
         long lastId = articleList.get(lastIdx).getId();
@@ -41,7 +57,7 @@ public class ArticleService {
         return ResponseDataWrapper.of("S-4", "Reading Success", pageWrapper);
     }
 
-    private List<ArticlePage> readArticleList(ArticleRead articleRead) {
+    private List<ArticlePage> readArticleList(ArticleReading articleRead) {
         String category = articleRead.getCategory();
         long fromId = articleRead.getFromId();
         int selectRange = articleRead.getSelectRange();
